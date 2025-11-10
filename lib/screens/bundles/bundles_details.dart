@@ -52,15 +52,15 @@ class _BundleDetailPageState extends State<BundleDetailPage> {
     // Mapping harga bundle berdasarkan nama (bisa disesuaikan)
     if (name.contains('XENOHUNTER') ||
         name.contains('RGX 11Z PRO') ||
-        name.contains('DIVERGENCE')  ||
-        name.contains('SPECTRUM')  ||
-        name.contains('DIVERGENCE'))  {
+        name.contains('DIVERGENCE') ||
+        name.contains('SPECTRUM') ||
+        name.contains('DIVERGENCE')) {
       return 5012; // Ultra/Premium bundle
     } else if (name.contains('STANDARD') || name.contains('BASIC')) {
-      return 3000; // Standard bundle
+      return 3300; // Standard bundle
     } else {
       // Default harga berdasarkan jumlah skin
-      return 3000; // Harga default
+      return 3100; // Harga default
     }
   }
 
