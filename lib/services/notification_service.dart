@@ -60,7 +60,7 @@ WIB: ${times['WIB']} • WITA: ${times['WITA']} • WIT: ${times['WIT']} • Lon
     );
     await flutterLocalNotificationsPlugin.show(
       0,
-      'Berhasil membeli $vp VP!',
+      'Selamat, anda berhasil membeli $vp VP!',
       notificationBody,
       platformChannelSpecifics,
     );
