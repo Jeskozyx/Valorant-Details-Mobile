@@ -240,7 +240,7 @@ class _ProfilePageState extends State<ProfilePage> {
       child: Row(
         children: [
           Icon(icon, color: const Color(0xFFFF4655), size: 28),
-          const SizedBox(width: 20),
+          const SizedBox(width: 15),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

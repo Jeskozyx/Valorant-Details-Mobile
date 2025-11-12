@@ -416,197 +416,144 @@ class _BundleDetailPageState extends State<BundleDetailPage> {
 
           final String mainImageUrl = _selectedSkin!.displayIcon ?? '';
 
-          return SafeArea(
-            child: Column(
-              children: [
-                // Gambar utama skin
-                Expanded(
-                  flex: 3,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: mainImageUrl.isEmpty
-                        ? _buildImageErrorPlaceholder()
-                        : Image.network(
-                            mainImageUrl,
-                            fit: BoxFit.contain,
-                            loadingBuilder: _buildImageLoadingIndicator,
-                            errorBuilder: (context, error, stackTrace) =>
-                                _buildImageErrorPlaceholder(),
-                          ),
-                  ),
-                ),
+        return SafeArea(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.4,
+                      child: mainImageUrl.isEmpty
+                          ? _buildImageErrorPlaceholder()
+                          : Image.network(
+                              mainImageUrl,
+                              fit: BoxFit.contain,
+                              loadingBuilder: _buildImageLoadingIndicator,
+                              errorBuilder: (context, _, __) =>
+                                  _buildImageErrorPlaceholder(),
+                            ),
+                    ),
+                    const SizedBox(height: 16),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        _selectedSkin!.displayName.toUpperCase(),
+                        style: const TextStyle(
+                          fontFamily: 'Tungsten-Bold',
+                          fontSize: 26,
+                          color: Colors.white,
+                          letterSpacing: 1.5,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text("SKINS",
+                          style: TextStyle(
+                              fontFamily: 'Tungsten-Bold',
+                              fontSize: 18,
+                              color: Color(0xFFFF4655))),
+                    ),
+                    const Divider(color: Color(0xFFFF4655), thickness: 2),
+                    const SizedBox(height: 10),
 
-                // Bagian bawah skin dan tombol
-                Expanded(
-                  flex: 2,
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(0),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        colors: [
-                          Colors.black.withOpacity(0.4),
-                          Colors.transparent,
+                    SizedBox(
+                      height: 90,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: _availableSkins.length,
+                        itemBuilder: (context, i) {
+                          final skin = _availableSkins[i];
+                          final bool isSelected =
+                              skin.uuid == _selectedSkin?.uuid;
+                          return GestureDetector(
+                            onTap: () => setState(() => _selectedSkin = skin),
+                            child: Container(
+                              width: 90,
+                              margin: const EdgeInsets.only(right: 12),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.05),
+                                border: Border.all(
+                                  color: isSelected
+                                      ? const Color(0xFFFF4655)
+                                      : Colors.white.withOpacity(0.2),
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(6),
+                                child: Image.network(
+                                  skin.displayIcon ?? '',
+                                  fit: BoxFit.contain,
+                                  errorBuilder: (context, _, __) =>
+                                      _buildImageErrorPlaceholder(),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.05),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                            color: const Color(0xFFFF4655).withOpacity(0.3)),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset('assets/images/vp.png',
+                              width: 24, height: 24),
+                          const SizedBox(width: 8),
+                          Text('$_bundlePrice VP',
+                              style: const TextStyle(
+                                  fontFamily: 'Tungsten-Bold',
+                                  fontSize: 22,
+                                  color: Color(0xFFFF4655))),
                         ],
                       ),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          _selectedSkin!.displayName.toUpperCase(),
-                          style: const TextStyle(
-                            fontFamily: 'Tungsten-Bold',
-                            fontSize: 26,
-                            color: Colors.white,
-                            letterSpacing: 1.5,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          "SKINS",
-                          style: TextStyle(
-                            fontFamily: 'Tungsten-Bold',
-                            fontSize: 18,
-                            letterSpacing: 1,
-                            color: Color(0xFFFF4655),
-                          ),
-                        ),
-                        const Divider(
-                          color: Color(0xFFFF4655),
-                          thickness: 2,
-                          endIndent: 250,
-                        ),
-                        const SizedBox(height: 10),
-
-                        // Horizontal scroll list
-                        SizedBox(
-                          height: 90,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            physics: const BouncingScrollPhysics(),
-                            itemCount: _availableSkins.length,
-                            itemBuilder: (context, index) {
-                              final skin = _availableSkins[index];
-                              final bool isSelected =
-                                  skin.uuid == _selectedSkin?.uuid;
-                              final String thumbnailUrl =
-                                  skin.displayIcon ?? '';
-
-                              return GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _selectedSkin = skin;
-                                  });
-                                },
-                                child: Container(
-                                  width: 90,
-                                  margin: const EdgeInsets.only(right: 12),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.05),
-                                    border: Border.all(
-                                      color: isSelected
-                                          ? const Color(0xFFFF4655)
-                                          : Colors.white.withOpacity(0.2),
-                                      width: 2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(6),
-                                    child: thumbnailUrl.isEmpty
-                                        ? _buildImageErrorPlaceholder()
-                                        : Image.network(
-                                            thumbnailUrl,
-                                            fit: BoxFit.contain,
-                                            loadingBuilder:
-                                                _buildImageLoadingIndicator,
-                                            errorBuilder:
-                                                (context, error, stackTrace) =>
-                                                    _buildImageErrorPlaceholder(),
-                                          ),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-
-                        const SizedBox(height: 16),
-
-                        // Harga bundle
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.05),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _availableVP >= _bundlePrice
+                            ? _purchaseBundle
+                            : null,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _availableVP >= _bundlePrice
+                              ? const Color(0xFFFF4655)
+                              : Colors.grey,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: const Color(0xFFFF4655).withOpacity(0.3),
-                              width: 1,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                'assets/images/vp.png',
-                                width: 24,
-                                height: 24,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                '$_bundlePrice VP',
-                                style: const TextStyle(
-                                  fontFamily: 'Tungsten-Bold',
-                                  fontSize: 22,
-                                  letterSpacing: 1.5,
-                                  color: Color(0xFFFF4655),
-                                ),
-                              ),
-                            ],
                           ),
                         ),
-
-                        const SizedBox(height: 16),
-
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: _availableVP >= _bundlePrice
-                                ? () => _purchaseBundle()
-                                : null,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: _availableVP >= _bundlePrice
-                                  ? const Color(0xFFFF4655)
-                                  : Colors.grey,
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              disabledBackgroundColor: Colors.grey.withOpacity(
-                                0.5,
-                              ),
-                            ),
-                            child: Text(
-                              _availableVP >= _bundlePrice
-                                  ? "BUY BUNDLE"
-                                  : "INSUFFICIENT VP",
-                              style: const TextStyle(
-                                fontFamily: 'Tungsten-Bold',
-                                fontSize: 20,
-                                letterSpacing: 1.5,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
+                        child: Text(
+                          _availableVP >= _bundlePrice
+                              ? "BUY BUNDLE"
+                              : "INSUFFICIENT VP",
+                          style: const TextStyle(
+                              fontFamily: 'Tungsten-Bold',
+                              fontSize: 20,
+                              color: Colors.white),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 24),
+                  ],
                 ),
-              ],
+              ),
             ),
           );
         },
